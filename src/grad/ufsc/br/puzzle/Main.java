@@ -19,16 +19,6 @@ public class Main {
                          2, 5, 4,
                          3, 0, 1 };
 
-        Integer[] entrada4 = {8, 5, 1,
-                         2, 6, 7,
-                         0, 4, 3 };
-
-        Integer[] entrada5 = {5, 6, 1,
-                         4, 2, 3,
-                         7, 8, 0 };
-
-        Integer[] objetivo = {1, 2, 3, 4, 5, 6, 7, 8, 0};
-
         Tabuleiro tabuleiro = new Tabuleiro();
         tabuleiro.setButtonsValues(entrada2);
 

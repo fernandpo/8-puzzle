@@ -4,14 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import static grad.ufsc.br.puzzle.Entidades.VariacoesAlgoritimo.CUSTO_UNIFORME;
-
 public class Nodo {
 
 
 
     private int custo;
-    // Valores dentro do tabuleiro;
     private Integer[] valoresNodo;
     private ArrayList<Nodo> nodosFilhos;
     private ArrayList<Nodo> caminhoDoNodo;
@@ -19,11 +16,6 @@ public class Nodo {
 
     public ArrayList<Nodo> getCaminhoDoNodo() {
         return caminhoDoNodo;
-    }
-
-    public Nodo setCaminhoDoNodo(ArrayList<Nodo> caminhoDoNodo) {
-        this.caminhoDoNodo = caminhoDoNodo;
-        return this;
     }
 
 
@@ -54,19 +46,10 @@ public class Nodo {
         return custo;
     }
 
-    public Nodo setCusto(int custo) {
-        this.custo = custo;
-        return this;
-    }
-
     public Integer [] getValoresNodo() {
         return valoresNodo;
     }
 
-    public Nodo setValoresNodo(Integer [] valoresNodo) {
-        this.valoresNodo = valoresNodo;
-        return this;
-    }
 
     public ArrayList<Nodo> getNodosFilhos(VariacoesAlgoritimo variacoesAlgoritimo) {
         if(!nodosFilhos.isEmpty()){
