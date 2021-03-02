@@ -27,7 +27,7 @@ public class Nodo {
     }
 
     // Mudar para Heuristicas diferentes
-    public int getCusto(VariacoesAlgoritimo variacoesAlgoritimo) {
+    public int getCustoByAlgoritimo(VariacoesAlgoritimo variacoesAlgoritimo) {
         switch (variacoesAlgoritimo) {
             case CUSTO_UNIFORME:
                 return custo;
@@ -39,11 +39,25 @@ public class Nodo {
                     }
                 }
                 return custoFinal;
-            case A_ESTRELA_NomeAEscolher:
-
-                return 2;
+            case A_ESTRELA_MANHATTAN:
+                int custoManhattan = 0;
+                for (int i = 0; i < objetivo.length; i++) {
+                    if (valoresNodo[i] != objetivo[i]) {
+                        Integer posicaoObjetivo = getPosicaoObjetivo(valoresNodo[i]);
+                        custoManhattan += Math.abs((posicaoObjetivo - 1)/3) + Math.abs((posicaoObjetivo - 1)%3);
+                    }
+                }
+                return custoManhattan;
         }
         return custo;
+    }
+
+    public Integer getPosicaoObjetivo(Integer valor){
+        if(valor == 0) {
+            return 8;
+        } else {
+            return valor - 1;
+        }
     }
 
     public Integer [] getValoresNodo() {
@@ -62,7 +76,7 @@ public class Nodo {
                 int valorNaPosicaoAdjacente = valoresNodoFilho[posicaoAdjacente];
                 valoresNodoFilho[posicaoAdjacente] = 0;
                 valoresNodoFilho[this.getPosicaoVazia()] = valorNaPosicaoAdjacente;
-                Nodo nodoFilho = new Nodo(this.getCusto(variacoesAlgoritimo) + 1, valoresNodoFilho);
+                Nodo nodoFilho = new Nodo(this.getCustoByAlgoritimo(variacoesAlgoritimo) + 1, valoresNodoFilho);
                 if(this.caminhoDoNodo.isEmpty()){
                     nodoFilho.caminhoDoNodo.add(this);
                 } else {
@@ -137,6 +151,14 @@ public class Nodo {
         return this;
     }
     public String toString(){
-        return Arrays.toString(this.getValoresNodo());
+        String retorno = " ";
+        for (int i =0;i< this.getValoresNodo().length;i++){
+            retorno += valoresNodo[i] +", ";
+            if(i == 2 || i == 5){
+                retorno += "\n ";
+            }
+        }
+        return retorno;
+        //return Arrays.toString(this.getValoresNodo());
     }
 }
