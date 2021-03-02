@@ -1,19 +1,16 @@
 package grad.ufsc.br.puzzle.Telas;
 
-        import grad.ufsc.br.puzzle.Controladores.ControladorNodo;
-        import grad.ufsc.br.puzzle.Entidades.Nodo;
-        import grad.ufsc.br.puzzle.Entidades.VariacoesAlgoritimo;
+import grad.ufsc.br.puzzle.Controladores.ControladorNodo;
+import grad.ufsc.br.puzzle.Entidades.Nodo;
+import grad.ufsc.br.puzzle.Entidades.VariacoesAlgoritimo;
 
-        import javax.swing.*;
-        import java.awt.*;
-        import java.awt.event.ActionEvent;
-        import java.awt.event.ActionListener;
-        import java.awt.event.MouseEvent;
-        import java.sql.Time;
-        import java.util.ArrayList;
-        import java.util.Arrays;
-        import java.util.Date;
-        import java.util.Timer;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 
 public class Tabuleiro {
 
@@ -31,16 +28,18 @@ public class Tabuleiro {
     private JMenuItem tamanhoDoCaminho = new JMenuItem("Tamanho do caminho: ");
     private JMenuItem heuristica = new JMenuItem("Heurística: ");
     private JMenuItem tempo = new JMenuItem("Tempo em segundos: ");
+    private JMenuItem dificuldadeInfo = new JMenuItem("Dificuldade: ");
     private JMenuItem facilMenu = new JMenuItem("Fácil");
     private JMenuItem medioMenu = new JMenuItem("Médio");
     private JMenuItem dificilMenu = new JMenuItem("Difícil");
+    private String dificuldade = "";
     private Integer[] facil = {1, 5, 2,
                                4, 3, 0,
                                7, 8, 6 };
 
-    private Integer[] medio = {5, 0, 4,
-                               1, 3, 2,
-                               7, 8, 6 };
+    private Integer[] medio = {1, 3, 5,
+                               4, 0, 7,
+                               8, 2, 6 };
 
     private Integer[] dificil = {5, 6, 1,
                                  4, 2, 3,
@@ -65,6 +64,7 @@ public class Tabuleiro {
         menuInformacoes.add(tamanhoDaMaiorFronteira);
         menuInformacoes.add(tamanhoDoCaminho);
         menuInformacoes.add(tempo);
+        menuInformacoes.add(dificuldadeInfo);
         menubar.add(menuInformacoes);
         menuDificuldade.add(facilMenu);
         menuDificuldade.add(medioMenu);
@@ -91,6 +91,7 @@ public class Tabuleiro {
             @Override
             public void actionPerformed(ActionEvent e) {
                setButtonsValues(facil);
+               dificuldade = facilMenu.getText();
             }
         });
 
@@ -98,6 +99,7 @@ public class Tabuleiro {
             @Override
             public void actionPerformed(ActionEvent e) {
                setButtonsValues(medio);
+               dificuldade = medioMenu.getText();
             }
         });
 
@@ -105,6 +107,7 @@ public class Tabuleiro {
             @Override
             public void actionPerformed(ActionEvent e) {
                setButtonsValues(dificil);
+                dificuldade = dificilMenu.getText();
             }
         });
 
@@ -114,7 +117,7 @@ public class Tabuleiro {
                 controladorNodo.zerarTotais();
                 controladorNodo.setFronteira(new ArrayList<>());
                 if (buttonValuesAreValid()) {
-                    Nodo nodo = new Nodo(0, getButtonValues());
+                    Nodo nodo = new Nodo(0, getButtonValues(),0);
                     botaoResolver.setText("Resolvendo...");
                     Long startTime = new Date().getTime();
                     Nodo nodoObjetivo = controladorNodo.verificaObjetivo(nodo, objetivo);
@@ -129,11 +132,13 @@ public class Tabuleiro {
                     tamanhoDoCaminho.setText("Tamanho do caminho: ");
                     tempo.setText("Tempo em segundos: ");
                     heuristica.setText("Heurística: ");
+                    dificuldadeInfo.setText("Dificuldade: ");
                     heuristica.setText(heuristica.getText()+ controladorNodo.getVariacoesAlgoritimo().getDescricaoVariacaoAlgoritimo());
                     totalDeNodosVisitados.setText(totalDeNodosVisitados.getText() + controladorNodo.getTotalNodosVisitados());
                     totalDeNodosExpandidos.setText(totalDeNodosExpandidos.getText() + controladorNodo.getTotalDeNodosExpandidos());
                     tamanhoDaMaiorFronteira.setText(tamanhoDaMaiorFronteira.getText() + controladorNodo.getTamanhoDaMaiorFronteira());
                     tamanhoDoCaminho.setText(tamanhoDoCaminho.getText() + nodoObjetivo.getCaminhoDoNodo().size());
+                    dificuldadeInfo.setText(dificuldadeInfo.getText()+ getDificuldade());
                     for(Nodo nodoNoCaminho: nodoObjetivo.getCaminhoDoNodo()){
                         System.out.println("Nodo:" + Arrays.toString(nodoNoCaminho.getValoresNodo()));
                         System.out.println(nodoNoCaminho);
@@ -165,6 +170,10 @@ public class Tabuleiro {
         window.add(botaoLimpar);
 
         window.setVisible(true);
+    }
+
+    private String getDificuldade() {
+        return this.dificuldade;
     }
 
     public void cleanButtonValues() {

@@ -9,6 +9,7 @@ public class Nodo {
 
 
     private int custo;
+    private int custoHeuristica;
     private Integer[] valoresNodo;
     private ArrayList<Nodo> nodosFilhos;
     private ArrayList<Nodo> caminhoDoNodo;
@@ -19,22 +20,23 @@ public class Nodo {
     }
 
 
-    public Nodo(int custo, Integer [] valoresNodo) {
+    public Nodo(int custo, Integer [] valoresNodo, int custoHeuristica) {
         this.custo = custo;
         this.valoresNodo = valoresNodo;
         this.nodosFilhos = new ArrayList<>();
         this.caminhoDoNodo = new ArrayList<>();
+        this.custoHeuristica = custoHeuristica;
     }
 
     // Mudar para Heuristicas diferentes
-    public int getCustoByAlgoritimo(VariacoesAlgoritimo variacoesAlgoritimo) {
+    public int getCustoHeuristicaByAlgoritimo(VariacoesAlgoritimo variacoesAlgoritimo, Integer [] valores) {
         switch (variacoesAlgoritimo) {
             case CUSTO_UNIFORME:
                 return custo;
             case A_ESTRELA_SIMPLES:
                 int custoFinal = 0;
                 for (int i = 0; i < objetivo.length; i++) {
-                    if (valoresNodo[i] != objetivo[i]) {
+                    if (valores[i] != objetivo[i]) {
                         custoFinal++;
                     }
                 }
@@ -42,9 +44,9 @@ public class Nodo {
             case A_ESTRELA_MANHATTAN:
                 int custoManhattan = 0;
                 for (int i = 0; i < objetivo.length; i++) {
-                    if (valoresNodo[i] != objetivo[i]) {
-                        Integer posicaoObjetivo = getPosicaoObjetivo(valoresNodo[i]);
-                        custoManhattan += Math.abs((posicaoObjetivo - 1)/3) + Math.abs((posicaoObjetivo - 1)%3);
+                    if (valores[i] != objetivo[i]) {
+                        Integer posicaoObjetivo = getPosicaoObjetivo(valores[i]);
+                        custoManhattan += (Math.abs(valores[i]/3 - posicaoObjetivo/3) + Math.abs(valores[i]%3 - posicaoObjetivo%3));
                     }
                 }
                 return custoManhattan;
@@ -76,7 +78,7 @@ public class Nodo {
                 int valorNaPosicaoAdjacente = valoresNodoFilho[posicaoAdjacente];
                 valoresNodoFilho[posicaoAdjacente] = 0;
                 valoresNodoFilho[this.getPosicaoVazia()] = valorNaPosicaoAdjacente;
-                Nodo nodoFilho = new Nodo(this.getCustoByAlgoritimo(variacoesAlgoritimo) + 1, valoresNodoFilho);
+                Nodo nodoFilho = new Nodo(this.getCusto()+1, valoresNodoFilho, this.getCustoHeuristicaByAlgoritimo(variacoesAlgoritimo, valoresNodoFilho));
                 if(this.caminhoDoNodo.isEmpty()){
                     nodoFilho.caminhoDoNodo.add(this);
                 } else {
@@ -160,5 +162,9 @@ public class Nodo {
         }
         return retorno;
         //return Arrays.toString(this.getValoresNodo());
+    }
+
+    public int getCustoTotal(){
+        return this.custo + custoHeuristica;
     }
 }

@@ -43,7 +43,7 @@ public class ControladorNodo {
                     if (Objects.isNull(nodoObjetivo)) {
                         ArrayList<Nodo> nodosFilhos = nodoAtual.getNodosFilhos(this.getVariacoesAlgoritimo());
                         fronteira.addAll(nodosFilhos);
-                        fronteira.sort(Comparator.comparingInt(Nodo::getCusto));
+                        fronteira.sort(Comparator.comparingInt(Nodo::getCustoTotal));
                         totalDeNodosExpandidos += nodosFilhos.size();
                         if (!fronteira.isEmpty()) {
                             nodoAtual = fronteira.get(0);
