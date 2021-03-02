@@ -22,6 +22,8 @@ public class Tabuleiro {
     private JMenuBar menubar = new JMenuBar();
     private JMenu menuInformacoes = new JMenu("Informações");
     private JMenu menuDificuldade = new JMenu("Dificuldade");
+    private JMenu menuVerificarCaminho = new JMenu("Caminho");
+    private JMenuItem verificarCaminho = new JMenuItem("Verificar");
     private JMenuItem totalDeNodosVisitados = new JMenuItem("Total de nodos visitados: ");
     private JMenuItem totalDeNodosExpandidos = new JMenuItem("Total de Nodos expandidos: ");
     private JMenuItem tamanhoDaMaiorFronteira = new JMenuItem("Tamanho da maior fronteira: ");
@@ -46,6 +48,7 @@ public class Tabuleiro {
                                  7, 8, 0 };
 
     private ControladorNodo controladorNodo;
+    private Nodo nodoObjetivo;
 
     Integer[] objetivo = {1, 2, 3, 4, 5, 6, 7, 8, 0};
     Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -70,6 +73,9 @@ public class Tabuleiro {
         menuDificuldade.add(medioMenu);
         menuDificuldade.add(dificilMenu);
         menubar.add(menuDificuldade);
+        menuVerificarCaminho.add(tamanhoDoCaminho);
+        menuVerificarCaminho.add(verificarCaminho);
+        menubar.add(menuVerificarCaminho);
         window.setJMenuBar(menubar);
         this.controladorNodo = new ControladorNodo();
 
@@ -121,6 +127,7 @@ public class Tabuleiro {
                     botaoResolver.setText("Resolvendo...");
                     Long startTime = new Date().getTime();
                     Nodo nodoObjetivo = controladorNodo.verificaObjetivo(nodo, objetivo);
+                    setNodoObjetivo(nodoObjetivo);
                     Long endTime = new Date().getTime();
                     Double finalTime = Double.valueOf(endTime - startTime);
                     ArrayList<Nodo> nodosAteObjetivo = nodoObjetivo.getCaminhoDoNodo();
@@ -145,7 +152,20 @@ public class Tabuleiro {
                     }
                     tempo.setText(tempo.getText() + finalTime/1000);
                     botaoResolver.setText("Resolver");
+                    JOptionPane.showMessageDialog(window,"Objetivo Encontrado! \n Clique em Informações para saber as estatísticas.");
                 }
+            }
+        });
+
+        verificarCaminho.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(nodoObjetivo != null){
+                    TelaCaminho telaCaminho = new TelaCaminho(nodoObjetivo);
+                } else {
+                    JOptionPane.showMessageDialog(window,"Nodo objetivo não encontrado");
+                }
+
             }
         });
 
@@ -252,6 +272,11 @@ public class Tabuleiro {
 
     public ControladorNodo getControladorNodo() {
         return controladorNodo;
+    }
+
+    public Tabuleiro setNodoObjetivo(Nodo nodoObjetivo) {
+        this.nodoObjetivo = nodoObjetivo;
+        return this;
     }
 
 }
